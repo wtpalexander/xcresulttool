@@ -86,21 +86,13 @@ async function run(): Promise<void> {
         )
       }
       const annotations = report.annotations.slice(0, 50)
-      let output
-      if (reportDetail.trim()) {
-        output = {
-          title: 'Xcode test results',
-          summary: reportSummary,
-          text: reportDetail,
-          annotations
-        }
-      } else {
-        output = {
-          title: 'Xcode test results',
-          summary: reportSummary,
-          annotations
-        }
+      let output = {
+        title: 'Xcode test results',
+        summary: reportSummary,
+        text: reportDetail.trim() ? reportDetail : undefined,
+        annotations
       }
+
       await octokit.checks.create({
         owner,
         repo,
@@ -122,13 +114,10 @@ async function run(): Promise<void> {
             continue
           }
 
-          const artifactClient = artifact.create()
+          const artifactClient = new artifact.DefaultArtifactClient()
           const artifactName = path.basename(uploadBundlePath)
 
           const rootDirectory = uploadBundlePath
-          const options = {
-            continueOnError: false
-          }
 
           glob(`${uploadBundlePath}/**/*`, async (error, files) => {
             if (error) {
@@ -138,8 +127,7 @@ async function run(): Promise<void> {
               await artifactClient.uploadArtifact(
                 artifactName,
                 files,
-                rootDirectory,
-                options
+                rootDirectory
               )
             }
           })

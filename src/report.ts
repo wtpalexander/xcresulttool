@@ -10,10 +10,21 @@ import {ActivityLogCommandInvocationSection} from '../dev/@types/ActivityLogComm
 import {ActivityLogSection} from '../dev/@types/ActivityLogSection.d'
 import {CodeCoverage} from './coverage'
 
+export type GitHubChecksConclusion =
+  | 'action_required'
+  | 'cancelled'
+  | 'failure'
+  | 'neutral'
+  | 'success'
+  | 'skipped'
+  | 'stale'
+  | 'timed_out'
+  | undefined
+
 export class TestReport {
   entityName?: string
   creatingWorkspaceFilePath?: string
-  testStatus = 'neutral'
+  testStatus: GitHubChecksConclusion = 'neutral'
 
   buildLog?: BuildLog
   readonly chapters: TestReportChapter[] = []
@@ -222,7 +233,7 @@ export class Annotation {
   end_line: number
   start_column?: number
   end_column?: number
-  annotation_level: string
+  annotation_level: 'failure' | 'notice' | 'warning'
   message: string
   title?: string
   raw_details?: string
@@ -231,7 +242,7 @@ export class Annotation {
     path: string,
     start_line: number,
     end_line: number,
-    annotation_level: string,
+    annotation_level: 'failure' | 'notice' | 'warning',
     message: string,
     title?: string,
     raw_details?: string
