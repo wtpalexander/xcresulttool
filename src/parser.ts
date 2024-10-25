@@ -1,5 +1,6 @@
 /*eslint-disable @typescript-eslint/no-explicit-any */
 
+import * as core from '@actions/core'
 import * as exec from '@actions/exec'
 import {promises} from 'fs'
 const {readFile} = promises
@@ -30,7 +31,7 @@ export class Parser {
       reference
     ]
     const options = {
-      silent: true
+      silent: !core.isDebug()
     }
 
     await exec.exec('xcrun', args, options)
@@ -42,7 +43,7 @@ export class Parser {
 
     let output = ''
     const options = {
-      silent: true,
+      silent: !core.isDebug(),
       listeners: {
         stdout: (data: Buffer) => {
           output += data.toString()
@@ -70,7 +71,7 @@ export class Parser {
 
     let output = ''
     const options = {
-      silent: true,
+      silent: !core.isDebug(),
       listeners: {
         stdout: (data: Buffer) => {
           output += data.toString()
