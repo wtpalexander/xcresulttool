@@ -44,7 +44,7 @@ export async function exportAttachments(
 
         let output = ''
         const options = {
-          silent: true,
+          silent: !core.isDebug(),
           listeners: {
             stdout: (data: Buffer) => {
               output += data.toString()
