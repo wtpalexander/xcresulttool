@@ -115,7 +115,10 @@ async function run(): Promise<void> {
           }
 
           const artifactClient = new artifact.DefaultArtifactClient()
-          const artifactName = path.basename(uploadBundlePath)
+          const bundleName = path.basename(uploadBundlePath)
+
+          const artifactName = `${title} (${bundleName})`
+          core.info(`Creating artifact ${artifactName}`)
 
           const rootDirectory = uploadBundlePath
 
@@ -124,6 +127,7 @@ async function run(): Promise<void> {
               core.error(error)
             }
             if (files.length) {
+              core.info(`Uploading artifact ${artifactName}`)
               await artifactClient.uploadArtifact(
                 artifactName,
                 files,
