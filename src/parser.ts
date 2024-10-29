@@ -20,8 +20,8 @@ export class Parser {
   }
 
   async exportObject(reference: string, outputPath: string): Promise<Buffer> {
-    const xcodeVersion = await getXcodeVersion();
-    
+    const xcodeVersion = await getXcodeVersion()
+
     const args = [
       'xcresulttool',
       'export',
@@ -36,9 +36,9 @@ export class Parser {
     ]
 
     if (xcodeVersion >= 16) {
-      args.push('--legacy');
+      args.push('--legacy')
     }
-    
+
     const options = {
       silent: !core.isDebug()
     }
@@ -65,8 +65,8 @@ export class Parser {
   }
 
   private async toJSON(reference?: string): Promise<string> {
-    const xcodeVersion = await getXcodeVersion();
-    
+    const xcodeVersion = await getXcodeVersion()
+
     const args = [
       'xcresulttool',
       'get',
@@ -81,9 +81,9 @@ export class Parser {
     }
 
     if (xcodeVersion >= 16) {
-      args.push('--legacy');
+      args.push('--legacy')
     }
-    
+
     let output = ''
     const options = {
       silent: !core.isDebug(),

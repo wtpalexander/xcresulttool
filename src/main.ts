@@ -150,8 +150,8 @@ async function mergeResultBundle(
   outputPath: string
 ): Promise<void> {
   const args = ['xcresulttool', 'merge']
-  .concat(inputPaths)
-  .concat(['--output-path', outputPath])
+    .concat(inputPaths)
+    .concat(['--output-path', outputPath])
 
   const options = {
     silent: !core.isDebug()
