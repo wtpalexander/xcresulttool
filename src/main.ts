@@ -152,6 +152,7 @@ async function mergeResultBundle(
   const args = ['xcresulttool', 'merge']
     .concat(inputPaths)
     .concat(['--output-path', outputPath])
+
   const options = {
     silent: !core.isDebug()
   }

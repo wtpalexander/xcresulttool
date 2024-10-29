@@ -10,7 +10,18 @@ on: # rebuild any PRs and main branch changes
 
 jobs:
   build: # make sure build/ci work properly
-    runs-on: macos-14
+    strategy:
+      fail-fast: false
+      matrix:
+        xcode: ['xcode16', 'xcode15']
+        include:
+          - xcode: 'xcode16'
+            xcode-path: '/Applications/Xcode_16.0.app'
+            macos: 'macos-15'
+          - xcode: 'xcode15'
+            xcode-path: '/Applications/Xcode_15.4.app'
+            macos: 'macos-14'
+    runs-on: ${{ matrix.macos }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -21,57 +32,68 @@ jobs:
       - run: |
           npm run all
   test: # make sure the action works on a clean machine without building
-    runs-on: macos-14
+    strategy:
+      fail-fast: false
+      matrix:
+        xcode: ['xcode16', 'xcode15']
+        include:
+          - xcode: 'xcode16'
+            xcode-path: '/Applications/Xcode_16.0.app'
+            macos: 'macos-15'
+          - xcode: 'xcode15'
+            xcode-path: '/Applications/Xcode_15.4.app'
+            macos: 'macos-14'
+    runs-on: ${{ matrix.macos }}
     steps:
       - uses: actions/checkout@v4
       - uses: ./
         with:
           path: __tests__/data/Example.xcresult
-          title: Example test report
+          title: 'Example test report (${{ matrix.xcode }})'
       - uses: ./
         with:
           path: __tests__/data/Example.xcresult
-          title: Example Failures Only test report
+          title: 'Example Failures Only test report (${{ matrix.xcode }})'
           show-passed-tests: false
       - uses: ./
         with:
           path: __tests__/data/KeychainAccess.xcresult
-          title: KeychainAccess Failures Only test report
+          title: 'KeychainAccess Failures Only test report (${{ matrix.xcode }})'
           show-passed-tests: false
       - uses: ./
         with:
           path: __tests__/data/KeychainAccess.xcresult
-          title: KeychainAccess test report
+          title: 'KeychainAccess test report (${{ matrix.xcode }})'
       - uses: ./
         with:
           path: __tests__/data/TAU.xcresult
-          title: TAU test report
+          title: 'TAU test report (${{ matrix.xcode }})'
       - uses: ./
         with:
           path: __tests__/data/TestResults.xcresult
-          title: TestResults test report
+          title: 'TestResults test report (${{ matrix.xcode }})'
       - uses: ./
         with:
           path: __tests__/data/Coverage.xcresult
-          title: Coverage test report
+          title: 'Coverage test report (${{ matrix.xcode }})'
       - uses: ./
         with:
           path: __tests__/data/Coverage.xcresult
-          title: Hide Coverage test report
+          title: 'Hide Coverage test report (${{ matrix.xcode }})'
           show-code-coverage: false
       - uses: ./
         with:
           path: __tests__/data/UhooiPicBook.xcresult
-          title: UhooiPicBook test report
+          title: 'UhooiPicBook test report (${{ matrix.xcode }})'
       - uses: ./
         with:
           path: __tests__/data/UhooiPicBook.xcresult
-          title: UhooiPicBook No Passed test report
+          title: 'UhooiPicBook No Passed test report (${{ matrix.xcode }})'
           show-passed-tests: false
       - uses: ./
         with:
           path: __tests__/data/UhooiPicBook.xcresult
-          title: UhooiPicBook No Code Coverage test report
+          title: 'UhooiPicBook No Code Coverage test report (${{ matrix.xcode }})'
           show-code-coverage: false
       - uses: ./
         with:
@@ -79,4 +101,4 @@ jobs:
             __tests__/data/Example.xcresult
             __tests__/data/KeychainAccess.xcresult
             __tests__/data/TAU.xcresult
-          title: 'Multiple Paths'
+          title: 'Multiple Paths (${{ matrix.xcode }})'
