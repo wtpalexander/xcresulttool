@@ -182,6 +182,11 @@ export class Formatter {
         const group: TestSummaryStatsGroup = {}
         for (const [identifier, details] of Object.entries(detailGroup)) {
           const [stats, duration] = details.reduce(
+          // Remove duplicate test identifiers, keeping only the last occurrence
+          const uniqueDetails = Array.from(
+            new Map(details.map(d => [d.identifier, d])).values()
+          )
+          const [stats, duration] = uniqueDetails.reduce(
             ([stats, duration]: [TestSummaryStats, number], detail) => {
               const test = detail as ActionTestSummary
               if (test.testStatus) {
