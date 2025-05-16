@@ -182,11 +182,6 @@ export class Formatter {
         const group: TestSummaryStatsGroup = {}
         for (const [identifier, details] of Object.entries(detailGroup)) {
           const [stats, duration] = details.reduce(
-          // Remove duplicate test identifiers, keeping only the last occurrence
-          const uniqueDetails = Array.from(
-            new Map(details.map(d => [d.identifier, d])).values()
-          )
-          const [stats, duration] = uniqueDetails.reduce(
             ([stats, duration]: [TestSummaryStats, number], detail) => {
               const test = detail as ActionTestSummary
               if (test.testStatus) {
@@ -890,7 +885,12 @@ export class Formatter {
       return
     }
 
-    for (const test of tests) {
+    // Remove repeated tests, to leave the final occurrence
+    const uniqueTests = Array.from(
+      new Map(tests.map(d => [d.identifier, d])).values()
+    )
+
+    for (const test of uniqueTests) {
       if (test.hasOwnProperty('subtests')) {
         const group = test as ActionTestSummaryGroup
         await this.collectTestSummaries(group, group.subtests, testSummaries)
